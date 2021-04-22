@@ -26,6 +26,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.Format;
+import com.google.android.exoplayer2.audioteka.LicenseExpirationRevalidator;
 import com.google.android.exoplayer2.drm.DrmInitData.SchemeData;
 import com.google.android.exoplayer2.drm.DrmSession.DrmSessionException;
 import com.google.android.exoplayer2.drm.ExoMediaDrm.OnEventListener;
@@ -62,6 +63,7 @@ public class DefaultDrmSessionManager implements DrmSessionManager {
 
     private final HashMap<String, String> keyRequestParameters;
     private UUID uuid;
+    private LicenseExpirationRevalidator licenseExpirationRevalidator;
     private ExoMediaDrm.Provider exoMediaDrmProvider;
     private boolean multiSession;
     private int[] useDrmSessionsForClearContentTrackTypes;
@@ -91,6 +93,11 @@ public class DefaultDrmSessionManager implements DrmSessionManager {
       loadErrorHandlingPolicy = new DefaultLoadErrorHandlingPolicy();
       useDrmSessionsForClearContentTrackTypes = new int[0];
       sessionKeepaliveMs = DEFAULT_SESSION_KEEPALIVE_MS;
+    }
+
+    public Builder setLicenseExpirationRevalidator(LicenseExpirationRevalidator licenseExpirationRevalidator) {
+      this.licenseExpirationRevalidator = licenseExpirationRevalidator;
+      return this;
     }
 
     /**
@@ -216,6 +223,7 @@ public class DefaultDrmSessionManager implements DrmSessionManager {
           uuid,
           exoMediaDrmProvider,
           mediaDrmCallback,
+          licenseExpirationRevalidator,
           keyRequestParameters,
           multiSession,
           useDrmSessionsForClearContentTrackTypes,
@@ -271,6 +279,7 @@ public class DefaultDrmSessionManager implements DrmSessionManager {
   private final UUID uuid;
   private final ExoMediaDrm.Provider exoMediaDrmProvider;
   private final MediaDrmCallback callback;
+  private final LicenseExpirationRevalidator licenseExpirationRevalidator;
   private final HashMap<String, String> keyRequestParameters;
   private final boolean multiSession;
   private final int[] useDrmSessionsForClearContentTrackTypes;
@@ -370,6 +379,7 @@ public class DefaultDrmSessionManager implements DrmSessionManager {
         uuid,
         new ExoMediaDrm.AppManagedProvider(exoMediaDrm),
         callback,
+        null,
         keyRequestParameters == null ? new HashMap<>() : keyRequestParameters,
         multiSession,
         /* useDrmSessionsForClearContentTrackTypes= */ new int[0],
@@ -382,6 +392,7 @@ public class DefaultDrmSessionManager implements DrmSessionManager {
       UUID uuid,
       ExoMediaDrm.Provider exoMediaDrmProvider,
       MediaDrmCallback callback,
+      LicenseExpirationRevalidator licenseExpirationRevalidator,
       HashMap<String, String> keyRequestParameters,
       boolean multiSession,
       int[] useDrmSessionsForClearContentTrackTypes,
@@ -393,6 +404,7 @@ public class DefaultDrmSessionManager implements DrmSessionManager {
     this.uuid = uuid;
     this.exoMediaDrmProvider = exoMediaDrmProvider;
     this.callback = callback;
+    this.licenseExpirationRevalidator = licenseExpirationRevalidator;
     this.keyRequestParameters = keyRequestParameters;
     this.multiSession = multiSession;
     this.useDrmSessionsForClearContentTrackTypes = useDrmSessionsForClearContentTrackTypes;
@@ -671,6 +683,7 @@ public class DefaultDrmSessionManager implements DrmSessionManager {
         new DefaultDrmSession(
             uuid,
             exoMediaDrm,
+            licenseExpirationRevalidator,
             /* provisioningManager= */ provisioningManagerImpl,
             referenceCountListener,
             schemeDatas,
