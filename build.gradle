@@ -17,7 +17,10 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.1'
+        // Fixes java.lang.NoClassDefFoundError: org/apache/batik/w3c/dom/ElementTraversal on Jenkins
+        classpath "xml-apis:xml-apis:1.4.01"
+
+        classpath 'com.android.tools.build:gradle:4.2.1'
         classpath 'com.google.android.gms:strict-version-matcher-plugin:1.2.1'
     }
 }
