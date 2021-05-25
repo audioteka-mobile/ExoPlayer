@@ -14,7 +14,7 @@ redirect_from:
 * [Why do some streams fail with HTTP response code 301 or 302?][]
 * [Why do some streams fail with UnrecognizedInputFormatException?][]
 * [Why doesn't setPlaybackParameters work properly on some devices?][]
-* [What do "Player is accessed on the wrong thread" warnings mean?][]
+* [What do "Player is accessed on the wrong thread" errors mean?][]
 * [How can I fix "Unexpected status line: ICY 200 OK"?][]
 * [How can I query whether the stream being played is a live stream?][]
 * [How do I keep audio playing when my app is backgrounded?][]
@@ -204,17 +204,7 @@ releases you provide to end users should not be affected by this issue.
 
 #### What do "Player is accessed on the wrong thread" errors mean? ####
 
-If you are seeing `IllegalStateException` being thrown with the message "Player
-is accessed on the wrong thread", then some code in your app is accessing a
-`SimpleExoPlayer` instance on the wrong thread (the exception's stack trace
-shows you where). ExoPlayer instances need to be accessed from a single thread
-only. In most cases, this should be the application's main thread. For details,
-please read through the ["Threading model" section of the ExoPlayer Javadoc][].
-You can temporarily opt out from these exceptions being thrown by calling
-`SimpleExoPlayer.setThrowsWhenUsingWrongThread(false)`, in which case the issue
-will be logged as a warning instead. Using this opt out is not safe and may
-result in unexpected or obscure errors. The opt out will be removed in ExoPlayer
-2.14.
+See [A note on threading][] on the getting started page.
 
 #### How can I fix "Unexpected status line: ICY 200 OK"? ####
 
@@ -227,8 +217,8 @@ status lines correctly.
 
 #### How can I query whether the stream being played is a live stream? ####
 
-You can query ExoPlayer's [`isCurrentWindowLive`][] method. In addition, you can
-check [`isCurrentWindowDynamic`][] to find out whether the window is dynamic
+You can query the player's [`isCurrentWindowLive`][] method. In addition, you
+can check [`isCurrentWindowDynamic`][] to find out whether the window is dynamic
 (i.e., still updating over time).
 
 #### How do I keep audio playing when my app is backgrounded? ####
@@ -313,7 +303,7 @@ is the official way to play YouTube videos on Android.
 [Why do some streams fail with HTTP response code 301 or 302?]: #why-do-some-streams-fail-with-http-response-code-301-or-302
 [Why do some streams fail with UnrecognizedInputFormatException?]: #why-do-some-streams-fail-with-unrecognizedinputformatexception
 [Why doesn't setPlaybackParameters work properly on some devices?]: #why-doesnt-setplaybackparameters-work-properly-on-some-devices
-[What do "Player is accessed on the wrong thread" warnings mean?]: #what-do-player-is-accessed-on-the-wrong-thread-warnings-mean
+[What do "Player is accessed on the wrong thread" errors mean?]: #what-do-player-is-accessed-on-the-wrong-thread-errors-mean
 [How can I fix "Unexpected status line: ICY 200 OK"?]:  #how-can-i-fix-unexpected-status-line-icy-200-ok
 [How can I query whether the stream being played is a live stream?]: #how-can-i-query-whether-the-stream-being-played-is-a-live-stream
 [How do I keep audio playing when my app is backgrounded?]: #how-do-i-keep-audio-playing-when-my-app-is-backgrounded
@@ -325,29 +315,29 @@ is the official way to play YouTube videos on Android.
 
 [Supported formats]: {{ site.baseurl }}/supported-formats.html
 [set on a `DefaultExtractorsFactory`]: {{ site.base_url }}/customization.html#customizing-extractor-flags
-[`setMp3ExtractorFlags`]: {{ site.exo_sdk }}/extractor/DefaultExtractorsFactory#setMp3ExtractorFlags-int-
+[`setMp3ExtractorFlags`]: {{ site.exo_sdk }}/extractor/DefaultExtractorsFactory#setMp3ExtractorFlags(int)
 [`FLAG_ENABLE_INDEX_SEEKING`]: {{ site.exo_sdk }}/extractor/mp3/Mp3Extractor.html#FLAG_ENABLE_INDEX_SEEKING
 [`FLAG_DETECT_ACCESS_UNITS`]: {{ site.exo_sdk }}/extractor/ts/DefaultTsPayloadReaderFactory.html#FLAG_DETECT_ACCESS_UNITS
 [`FLAG_ALLOW_NON_IDR_KEYFRAMES`]: {{ site.exo_sdk }}/extractor/ts/DefaultTsPayloadReaderFactory.html#FLAG_ALLOW_NON_IDR_KEYFRAMES
-[`setTsExtractorFlags`]: {{ site.exo_sdk }}/extractor/DefaultExtractorsFactory#setTsExtractorFlags-int-
+[`setTsExtractorFlags`]: {{ site.exo_sdk }}/extractor/DefaultExtractorsFactory#setTsExtractorFlags(int)
 [`Mp4Extractor.FLAG_WORKAROUND_IGNORE_EDIT_LISTS`]: {{ site.exo_sdk }}/extractor/mp4/Mp4Extractor.html#FLAG_WORKAROUND_IGNORE_EDIT_LISTS
 [`FragmentedMp4Extractor.FLAG_WORKAROUND_IGNORE_EDIT_LISTS`]: {{ site.exo_sdk }}/extractor/mp4/FragmentedMp4Extractor.html#FLAG_WORKAROUND_IGNORE_EDIT_LISTS
-[`setMp4ExtractorFlags`]: {{ site.exo_sdk }}/extractor/DefaultExtractorsFactory#setMp4ExtractorFlags-int-
-[`setFragmentedMp4ExtractorFlags`]: {{ site.exo_sdk }}/extractor/DefaultExtractorsFactory#setFragmentedMp4ExtractorFlags-int-
+[`setMp4ExtractorFlags`]: {{ site.exo_sdk }}/extractor/DefaultExtractorsFactory#setMp4ExtractorFlags(int)
+[`setFragmentedMp4ExtractorFlags`]: {{ site.exo_sdk }}/extractor/DefaultExtractorsFactory#setFragmentedMp4ExtractorFlags(int)
 [Wikipedia]: https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
 [wget]: https://www.gnu.org/software/wget/manual/wget.html
 [`DefaultHttpDataSourceFactory`]: {{ site.exo_sdk }}/upstream/DefaultHttpDataSourceFactory.html
 [ExoPlayer module]: {{ site.base_url }}/hello-world.html#add-exoplayer-modules
 [issue tracker]: https://github.com/google/ExoPlayer/issues
-[`isCurrentWindowLive`]: {{ site.exo_sdk }}/ExoPlayer.html#isCurrentWindowLive--
-[`isCurrentWindowDynamic`]: {{ site.exo_sdk }}/ExoPlayer.html#isCurrentWindowDynamic--
-[`setPlaybackParameters`]: {{ site.exo_sdk }}/Player.html#setPlaybackParameters-com.google.android.exoplayer2.PlaybackParameters-
+[`isCurrentWindowLive`]: {{ site.exo_sdk }}/Player.html#isCurrentWindowLive()
+[`isCurrentWindowDynamic`]: {{ site.exo_sdk }}/Player.html#isCurrentWindowDynamic()
+[`setPlaybackParameters`]: {{ site.exo_sdk }}/Player.html#setPlaybackParameters(com.google.android.exoplayer2.PlaybackParameters)
 [foreground service]: https://developer.android.com/guide/components/services.html#Foreground
 [`WifiLock`]: {{ site.android_sdk }}/android/net/wifi/WifiManager.WifiLock.html
 [`WakeLock`]: {{ site.android_sdk }}/android/os/PowerManager.WakeLock.html
 [`SimpleExoPlayer`]: {{ site.exo_sdk }}/SimpleExoPlayer.html
-[`setWakeMode`]: {{ site.exo_sdk }}/SimpleExoPlayer.html#setWakeMode-int-
-["Threading model" section of the ExoPlayer Javadoc]: {{ site.exo_sdk }}/ExoPlayer.html
+[`setWakeMode`]: {{ site.exo_sdk }}/SimpleExoPlayer.html#setWakeMode(int)
+[A note on threading]: {{ site.base_url }}/hello-world.html#a-note-on-threading
 [OkHttp extension]: {{ site.release_v2 }}/extensions/okhttp
 [CORS enabled]: https://www.w3.org/wiki/CORS_Enabled
 [Cast framework]: {{ site.google_sdk }}/cast/docs/chrome_sender/advanced#cors_requirements
