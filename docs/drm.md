@@ -26,12 +26,6 @@ outlined in the sections below.
 To play streams with rotating keys, pass `true` to
 `MediaItem.Builder.setDrmMultiSession` when building the media item.
 
-{% include known-issue-box.html issue-id="4133" description="There may be a
-slight pause in playback when key rotation occurs." %}
-
-{% include known-issue-box.html issue-id="3561" description="On API level 22
-and below, the output surface may flicker when key rotation occurs." %}
-
 ### Multi-key content ###
 
 Multi-key content consists of multiple streams, where some streams use different
@@ -61,10 +55,6 @@ when building the media item.
 We do not recommend configuring your license server to behave in this way. It
 requires extra license requests to play multi-key content, which is less
 efficient and robust than the alternative described above.
-
-{% include known-issue-box.html issue-id="4133" description="When using this
-license server configuration, there may be a slight pause in playback when
-adapting between streams that use different keys." %}
 
 ### Offline keys ###
 
