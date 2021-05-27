@@ -17,7 +17,6 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath "xml-apis:xml-apis:1.4.01"
         classpath 'com.android.tools.build:gradle:4.2.1'
         classpath 'com.google.android.gms:strict-version-matcher-plugin:1.2.2'
     }
